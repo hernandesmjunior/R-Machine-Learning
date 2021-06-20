@@ -7,13 +7,12 @@
 
 # carregando as bibliotecas
 
-library(tidyverse)
-library(cluster) #algoritmo de cluster
-library(dendextend) #compara dendogramas
-library(factoextra) #algoritmo de cluster e visualizacao
-library(fpc) #algoritmo de cluster e visualizacao
-library(gridExtra) #para a funcao grid arrange
-library(readxl)
+library(tidyverse)  # pacote para manipulação de dados
+library(cluster)    # algoritmo de cluster
+library(factoextra) # algoritmo de cluster e visualização
+library(fpc)        # algoritmo de cluster e visualização
+library(gridExtra)  # para a funcao grid arrange
+library(readxl)     # leitura dos dados
 
 
 # carregando a base de dados
@@ -31,12 +30,12 @@ clientes <- clientes %>% rename(salario.anual=Annual.Income..k..,
 clientes.padronizado <- scale(clientes)
 
 
-# verificando o n�mero de clusters com o elbow
+# verificando o número de clusters com o elbow
 
 fviz_nbclust(clientes.padronizado, FUN = hcut, method = "wss")
 
 
-# testando de 3 a 6 centros para visualizar a melhor divis�o
+# testando de 3 a 6 centros para visualizar a melhor divisão
 
 clientes.k3 <- kmeans(clientes.padronizado,centers=3)
 clientes.k4 <- kmeans(clientes.padronizado,centers=4)
@@ -44,7 +43,7 @@ clientes.k5 <- kmeans(clientes.padronizado,centers=5)
 clientes.k6 <- kmeans(clientes.padronizado,centers=6)
 
 
-# gr�ficos
+# gráficos
 
 G1 <- fviz_cluster(clientes.k3, geom="point", data=clientes.padronizado) + ggtitle("k=3")
 G2 <- fviz_cluster(clientes.k4, geom="point", data=clientes.padronizado) + ggtitle("k=4")
@@ -52,21 +51,21 @@ G3 <- fviz_cluster(clientes.k5, geom="point", data=clientes.padronizado) + ggtit
 G4 <- fviz_cluster(clientes.k6, geom="point", data=clientes.padronizado) + ggtitle("k=6")
 
 
-# matriz dos gr�ficos
+# matriz dos gráficos
 
 grid.arrange(G1,G2,G3,G4, nrow=2)
 
 
-# justando os dados
+# juntando os dados
 
 clientes2 <- read.table('Mall_Customers.csv',sep = ",", header = T, dec = ",")
 clientesfit <- data.frame(clientes.k5$cluster)
 
 clientes.final <- cbind(clientes2,clientesfit)
 
-# an�lise descritiva dos grupos
+# análise descritiva dos grupos
 
-## m�dia das variaveis
+## média das variaveis
 
 mediagrupo <- clientes.final %>% 
   group_by(clientes.k5.cluster) %>% 
